@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getValidPostcodes } from "src/utils/func/postcodes";
+import SearchBar from "./SearchBar";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,27 +60,17 @@ const Search = () => {
   }, [postcodes, selectedPostcodeIndex]);
 
   return (
-    <div className="flex flex-col">
-      <form
-        onSubmit={(event) => handleSubmitSearch(event)}
-        className="flex p-4 justify-center"
-      >
-        <input
-          className="flex w-2/3 m-2 border-2 outline-none rounded-md border-black focus:border-theme-purple hover:border-theme-purple"
-          type="text"
-          placeholder="Please enter a postcode or list of postcodes separated with commas"
-          value={searchTerm}
-          onChange={(event) => handleUpdateSearchTerm(event)}
-        />
-        <button
-          disabled={!searchTerm.length}
-          className="bg-theme-purple text-white p-2 rounded-md disabled:brightness-50"
-          type="submit"
-        >
-          Search by Postcode
-        </button>
-      </form>
-    </div>
+    <>
+      <SearchBar
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleUpdateSearchTerm(event)
+        }
+        onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
+          handleSubmitSearch(event)
+        }
+        search={searchTerm}
+      />
+    </>
   );
 };
 
