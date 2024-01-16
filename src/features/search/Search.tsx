@@ -1,27 +1,19 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { getValidPostcodes } from "src/utils/func/postcodes";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const postcodeQueryParams = searchParams.get("postcode");
-  const [searchTerm, setSearchTerm] = useState(postcodeQueryParams || "");
+  const postcodeQueryParams = searchParams.get("postcode") || "";
+  const initialPostcodes = getValidPostcodes(postcodeQueryParams);
+  const [searchTerm, setSearchTerm] = useState(
+    initialPostcodes.join(",") || ""
+  );
   const [postcodes, setPostcodes] = useState(
     postcodeQueryParams?.split(",") || [""]
   );
   const [coordinates, setCoordinates] = useState([{}]);
-
-  const validatePostcode = (postcode: string) => {
-    const postcodeRegex =
-      /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/;
-    return postcode.match(postcodeRegex);
-  };
-
-  const getValidPostcodes = (postcodes: string) => {
-    const postcodeArray = postcodes.split(",");
-    return postcodeArray.filter((postcode) => {
-      return validatePostcode(postcode);
-    });
-  };
+  const [selectedPostcodeIndex, setSelectedPostcodeIndex] = useState(0);
 
   const handleUpdateSearchTerm = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -33,11 +25,11 @@ const Search = () => {
   const handleSubmitSearch = (event: React.FormEvent<HTMLFormElement>) => {
     const validPostcodes = getValidPostcodes(searchTerm);
     event.preventDefault();
-    setSearchParams({ postcode: searchTerm });
     if (!validPostcodes.length) {
       window.alert("You have not entered a valid postcode!");
     } else {
       const validSearchTerm = validPostcodes.join(",");
+      setSearchParams({ postcode: searchTerm });
       setPostcodes(validPostcodes);
       setSearchTerm(validSearchTerm);
       setSearchParams({ postcode: validSearchTerm });
@@ -50,6 +42,21 @@ const Search = () => {
 
     setCoordinates([{ latitude, longitude }]);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `http://api.getthedata.com/postcode/${postcodes[selectedPostcodeIndex]}`
+      );
+
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.status === "match") {
+        handleUpdateCoordinates(jsonResponse);
+      }
+    };
+    fetchData();
+  }, [postcodes, selectedPostcodeIndex]);
 
   return (
     <div className="flex flex-col">
