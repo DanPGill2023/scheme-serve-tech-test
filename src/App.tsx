@@ -1,10 +1,10 @@
 import React from "react";
-import Search from "src/features/search/Search";
+import CrimeTracker from "src/features/crimeTracker/CrimeTracker";
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen flex-grow">
-      <Search />
+      <CrimeTracker />
     </div>
   );
 }

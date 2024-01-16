@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getValidPostcodes } from "src/utils/func/postcodes";
-import SearchBar from "./SearchBar";
+import SearchBar from "../search/SearchBar";
+import HistoricSearch from "../search/HistoricSearch";
 
-const Search = () => {
+const CrimeTracker = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const postcodeQueryParams = searchParams.get("postcode") || "";
   const initialPostcodes = getValidPostcodes(postcodeQueryParams);
@@ -60,7 +61,7 @@ const Search = () => {
   }, [postcodes, selectedPostcodeIndex]);
 
   return (
-    <>
+    <div className="flex flex-col flex-1">
       <SearchBar
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleUpdateSearchTerm(event)
@@ -70,8 +71,9 @@ const Search = () => {
         }
         search={searchTerm}
       />
-    </>
+      <HistoricSearch />
+    </div>
   );
 };
 
-export default Search;
+export default CrimeTracker;
