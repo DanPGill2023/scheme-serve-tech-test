@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   getValidPostcodes,
   updatePreviouslySearchedPostcodes,
+  removePreviouslySearchedPostcodes,
 } from "src/utils/func/postcodes";
 import SearchBar from "../search/SearchBar";
 import HistoricSearch from "../search/HistoricSearch";
@@ -57,6 +58,22 @@ const CrimeTracker = () => {
     setSearchParams({ postcode });
   };
 
+  const handleRemoveSavedPostcode = (postcode: string) => {
+    const updatedPostcodes = postcodes.filter((pc) => postcode !== pc);
+
+    setPostcodes(updatedPostcodes);
+
+    if (searchTerm.includes(postcode)) {
+      setSearchTerm(updatedPostcodes.join(", "));
+    }
+
+    if (postcodeQueryParams.includes(postcode)) {
+      setSearchParams({ postcode: updatedPostcodes.join(", ") });
+    }
+
+    removePreviouslySearchedPostcodes(postcode);
+  };
+
   useEffect(() => {
     if (postcodes.length) {
       const fetchData = async () => {
@@ -86,7 +103,12 @@ const CrimeTracker = () => {
         search={searchTerm}
       />
       <HistoricSearch
-        onClick={(postcode) => handleUpdateSelectedPostcodeIndex(postcode)}
+        onClickPostcode={(postcode) =>
+          handleUpdateSelectedPostcodeIndex(postcode)
+        }
+        onClickRemovePostcode={(postcode) =>
+          handleRemoveSavedPostcode(postcode)
+        }
       />
     </div>
   );

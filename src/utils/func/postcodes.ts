@@ -11,7 +11,7 @@ export const getValidPostcodes = (postcodes: string) => {
   });
 };
 
-export const updatePreviouslySearchedPostcodes = (postcodes: string[]) => {
+const getPreviousPostcodes = (postcodes: string[]) => {
   const previouslySearchedPostcodeString = localStorage
     .getItem("postcodes")
     ?.toUpperCase();
@@ -22,6 +22,12 @@ export const updatePreviouslySearchedPostcodes = (postcodes: string[]) => {
           ?.split(",")
           .map((postcode) => postcode.trim())
       : [];
+
+  return previouslySearchedPostcodes;
+};
+
+export const updatePreviouslySearchedPostcodes = (postcodes: string[]) => {
+  const previouslySearchedPostcodes = getPreviousPostcodes(postcodes);
   const newPostcodes = postcodes.filter(
     (postcode) => !previouslySearchedPostcodes?.includes(postcode)
   );
@@ -29,5 +35,15 @@ export const updatePreviouslySearchedPostcodes = (postcodes: string[]) => {
     ...previouslySearchedPostcodes,
     ...newPostcodes,
   ].map((postcode) => postcode.trim());
+  localStorage.setItem("postcodes", updatedPostcodes.join(", "));
+};
+
+export const removePreviouslySearchedPostcodes = (postcode: string) => {
+  const previouslySearchedPostcodes = getPreviousPostcodes([postcode]);
+  const newPostcodes = previouslySearchedPostcodes.filter(
+    (pc) => pc !== postcode
+  );
+  const updatedPostcodes = newPostcodes.map((pc) => pc.trim());
+  console.log(updatedPostcodes);
   localStorage.setItem("postcodes", updatedPostcodes.join(", "));
 };
