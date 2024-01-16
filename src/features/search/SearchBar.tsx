@@ -17,7 +17,7 @@ const SearchBar = ({ onSubmit, search, onChange }: SearchBarProps) => {
         />
         <button
           disabled={!search.length}
-          className="bg-theme-purple text-white p-2 rounded-md disabled:brightness-50"
+          className="bg-theme-purple text-white p-2 rounded-md hover:brightness-150 disabled:brightness-50"
           type="submit"
         >
           Search by Postcode

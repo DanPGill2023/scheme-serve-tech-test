@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getValidPostcodes } from "src/utils/func/postcodes";
+import {
+  getValidPostcodes,
+  updatePreviouslySearchedPostcodes,
+} from "src/utils/func/postcodes";
 import SearchBar from "../search/SearchBar";
 import HistoricSearch from "../search/HistoricSearch";
 
@@ -9,10 +12,10 @@ const CrimeTracker = () => {
   const postcodeQueryParams = searchParams.get("postcode") || "";
   const initialPostcodes = getValidPostcodes(postcodeQueryParams);
   const [searchTerm, setSearchTerm] = useState(
-    initialPostcodes.join(",") || ""
+    initialPostcodes.join(", ") || ""
   );
   const [postcodes, setPostcodes] = useState(
-    postcodeQueryParams?.split(",") || [""]
+    postcodeQueryParams.length ? postcodeQueryParams?.split(", ") : []
   );
   const [coordinates, setCoordinates] = useState([{}]);
   const [selectedPostcodeIndex, setSelectedPostcodeIndex] = useState(0);
@@ -25,16 +28,16 @@ const CrimeTracker = () => {
   };
 
   const handleSubmitSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    const validPostcodes = getValidPostcodes(searchTerm);
+    const validPostcodes = getValidPostcodes(searchTerm.toUpperCase());
     event.preventDefault();
     if (!validPostcodes.length) {
       window.alert("You have not entered a valid postcode!");
     } else {
-      const validSearchTerm = validPostcodes.join(",");
-      setSearchParams({ postcode: searchTerm });
+      const validSearchTerm = validPostcodes.join(", ");
       setPostcodes(validPostcodes);
       setSearchTerm(validSearchTerm);
       setSearchParams({ postcode: validSearchTerm });
+      updatePreviouslySearchedPostcodes(validPostcodes);
     }
   };
 
@@ -45,19 +48,30 @@ const CrimeTracker = () => {
     setCoordinates([{ latitude, longitude }]);
   };
 
+  const handleUpdateSelectedPostcodeIndex = (postcode: string) => {
+    const index = postcodes.indexOf(postcode);
+
+    setSelectedPostcodeIndex(index);
+    setPostcodes([postcode]);
+    setSearchTerm(postcode);
+    setSearchParams({ postcode });
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        `http://api.getthedata.com/postcode/${postcodes[selectedPostcodeIndex]}`
-      );
+    if (postcodes.length) {
+      const fetchData = async () => {
+        const response = await fetch(
+          `http://api.getthedata.com/postcode/${postcodes[selectedPostcodeIndex]}`
+        );
 
-      const jsonResponse = await response.json();
+        const jsonResponse = await response.json();
 
-      if (jsonResponse.status === "match") {
-        handleUpdateCoordinates(jsonResponse);
-      }
-    };
-    fetchData();
+        if (jsonResponse.status === "match") {
+          handleUpdateCoordinates(jsonResponse);
+        }
+      };
+      fetchData();
+    }
   }, [postcodes, selectedPostcodeIndex]);
 
   return (
@@ -71,7 +85,9 @@ const CrimeTracker = () => {
         }
         search={searchTerm}
       />
-      <HistoricSearch />
+      <HistoricSearch
+        onClick={(postcode) => handleUpdateSelectedPostcodeIndex(postcode)}
+      />
     </div>
   );
 };
