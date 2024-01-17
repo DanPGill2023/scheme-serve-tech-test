@@ -7,6 +7,7 @@ import {
 } from "src/utils/func/postcodes";
 import SearchBar from "../search/SearchBar";
 import HistoricSearch from "../search/HistoricSearch";
+import DataViewTable from "../table/DataViewTable";
 
 const CrimeTracker = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,8 +19,9 @@ const CrimeTracker = () => {
   const [postcodes, setPostcodes] = useState(
     postcodeQueryParams.length ? postcodeQueryParams?.split(", ") : []
   );
-  const [coordinates, setCoordinates] = useState([{}]);
+  const [coordinates, setCoordinates] = useState({});
   const [selectedPostcodeIndex, setSelectedPostcodeIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleUpdateSearchTerm = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -42,15 +44,17 @@ const CrimeTracker = () => {
     }
   };
 
-  const handleUpdateCoordinates = (response: any) => {
-    const { data } = response;
-    const { latitude, longitude } = data;
-
-    setCoordinates([{ latitude, longitude }]);
+  const handleUpdateCoordinates = (coordinates: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    setCoordinates(coordinates);
   };
 
   const handleUpdateSelectedPostcodeIndex = (postcode: string) => {
-    const index = postcodes.indexOf(postcode);
+    const index = postcodes.includes(postcode)
+      ? postcodes.indexOf(postcode)
+      : 0;
 
     setSelectedPostcodeIndex(index);
     setPostcodes([postcode]);
@@ -76,18 +80,24 @@ const CrimeTracker = () => {
 
   useEffect(() => {
     if (postcodes.length) {
+      setLoading(true);
       const fetchData = async () => {
         const response = await fetch(
           `http://api.getthedata.com/postcode/${postcodes[selectedPostcodeIndex]}`
         );
-
         const jsonResponse = await response.json();
 
         if (jsonResponse.status === "match") {
-          handleUpdateCoordinates(jsonResponse);
+          const { data } = jsonResponse;
+          const { latitude, longitude } = data;
+          const coordinates = {
+            latitude: Number(latitude),
+            longitude: Number(longitude),
+          };
+          handleUpdateCoordinates(coordinates);
         }
       };
-      fetchData();
+      fetchData().then(() => setLoading(false));
     }
   }, [postcodes, selectedPostcodeIndex]);
 
@@ -110,6 +120,12 @@ const CrimeTracker = () => {
           handleRemoveSavedPostcode(postcode)
         }
       />
+      <DataViewTable
+        loadingCoordinates={loading}
+        selectedCoordinates={coordinates}
+        postcode={postcodes[selectedPostcodeIndex]}
+      />
+      {/* <LoadingSpinnerWrapper isLoading={loading}></LoadingSpinnerWrapper> */}
     </div>
   );
 };
