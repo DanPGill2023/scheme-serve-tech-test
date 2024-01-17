@@ -13,15 +13,22 @@ const CrimeTracker = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const postcodeQueryParams = searchParams.get("postcode") || "";
   const initialPostcodes = getValidPostcodes(postcodeQueryParams);
-  const [searchTerm, setSearchTerm] = useState(
+
+  const [searchTerm, setSearchTerm] = useState<string>(
     initialPostcodes.join(", ") || ""
   );
-  const [postcodes, setPostcodes] = useState(
+  const [postcodes, setPostcodes] = useState<string[]>(
     postcodeQueryParams.length ? postcodeQueryParams?.split(", ") : []
   );
-  const [coordinates, setCoordinates] = useState({});
-  const [selectedPostcodeIndex, setSelectedPostcodeIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [coordinates, setCoordinates] = useState<
+    | {
+        latitude: number;
+        longitude: number;
+      }
+    | {}
+  >({});
+  const [selectedPostcodeIndex, setSelectedPostcodeIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleUpdateSearchTerm = (
     event: React.ChangeEvent<HTMLInputElement>
