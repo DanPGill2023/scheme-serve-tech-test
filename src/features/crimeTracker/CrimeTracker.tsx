@@ -125,7 +125,6 @@ const CrimeTracker = () => {
         selectedCoordinates={coordinates}
         postcode={postcodes[selectedPostcodeIndex]}
       />
-      {/* <LoadingSpinnerWrapper isLoading={loading}></LoadingSpinnerWrapper> */}
     </div>
   );
 };

@@ -15,6 +15,7 @@ const DataViewTable = ({
   );
   const [crimeData, setCrimeData] = useState<CrimeData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedPostcode, setSelectedPostcode] = useState<string>();
 
   const getCrimeTypes = (data: CrimeData[]) => {
     const crimeTypes = data.map((datum) => {
@@ -43,7 +44,7 @@ const DataViewTable = ({
       const outcome = outcome_status.category || "On Going";
 
       return {
-        postcode,
+        selectedPostcode,
         date_of_crime,
         street_name,
         outcome,
@@ -86,6 +87,13 @@ const DataViewTable = ({
     }
   }, [selectedCoordinates, date]);
 
+  useEffect(() => {
+    if (postcode !== selectedPostcode) {
+      setSelectedCrimeType("");
+    }
+    setSelectedPostcode(postcode);
+  }, [postcode, selectedPostcode]);
+
   const tableData = getTableData(crimeData);
   const tableHeaders = tableData ? getTableHeaders(tableData[0]) : [];
 
@@ -115,7 +123,7 @@ const DataViewTable = ({
             isLoading={loadingCoordinates || loading}
             spinnerColor={"white"}
           >
-            <table className="w-full border-collapse text-white table-fixed">
+            <table className="w-full rounded-md border-collapse text-white table-fixed">
               <thead>
                 <tr className="">
                   {tableHeaders.map((header, i) => {
