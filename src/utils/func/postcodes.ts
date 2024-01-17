@@ -44,6 +44,5 @@ export const removePreviouslySearchedPostcodes = (postcode: string) => {
     (pc) => pc !== postcode
   );
   const updatedPostcodes = newPostcodes.map((pc) => pc.trim());
-  console.log(updatedPostcodes);
   localStorage.setItem("postcodes", updatedPostcodes.join(", "));
 };
