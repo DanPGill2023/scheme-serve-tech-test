@@ -111,21 +111,13 @@ const CrimeTracker = () => {
   return (
     <div className="flex flex-col flex-1">
       <SearchBar
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          handleUpdateSearchTerm(event)
-        }
-        onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
-          handleSubmitSearch(event)
-        }
+        onChange={handleUpdateSearchTerm}
+        onSubmit={handleSubmitSearch}
         search={searchTerm}
       />
       <HistoricSearch
-        onClickPostcode={(postcode) =>
-          handleUpdateSelectedPostcodeIndex(postcode)
-        }
-        onClickRemovePostcode={(postcode) =>
-          handleRemoveSavedPostcode(postcode)
-        }
+        onClickPostcode={handleUpdateSelectedPostcodeIndex}
+        onClickRemovePostcode={handleRemoveSavedPostcode}
       />
       <DataViewTable
         loadingCoordinates={loading}

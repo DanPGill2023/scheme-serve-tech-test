@@ -11,6 +11,7 @@ const SearchBar = ({ onSubmit, search, onChange }: SearchBarProps) => {
         <input
           className="flex w-2/3 m-2 border-2 outline-none rounded-md border-black focus:border-theme-purple hover:border-theme-purple"
           type="text"
+          data-testid="input-search-bar"
           placeholder="Please enter a postcode or list of postcodes separated with commas"
           value={search}
           onChange={onChange}
