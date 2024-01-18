@@ -46,6 +46,9 @@ devDependencies:
   '@testing-library/jest-dom':
     specifier: ^5.17.0
     version: 5.17.0
+  '@types/testing-library__jest-dom':
+    specifier: '*'
+    version: 5.14.9
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.33)
