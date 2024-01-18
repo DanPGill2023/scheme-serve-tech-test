@@ -34,10 +34,7 @@
       "~/(.*)$": [
         "<rootDir>/src/$1"
       ]
-    },
-    "setupFilesAfterEnv": [
-      "src/setUpTests.ts"
-    ]
+    }
   },
   "browserslist": {
     "production": [

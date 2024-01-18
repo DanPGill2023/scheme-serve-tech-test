@@ -12,13 +12,14 @@ const HistoricSearch = ({
     postcodesString.length > 0 ? postcodesString?.split(", ") : [];
 
   return (
-    <div className="flex flex-col">
+    <div data-testid="historic-search-container" className="flex flex-col">
       <h1 className="ml-6">Previously Searched Postcodes:</h1>
       <div className="flex flex-wrap p-4 justify-center overflow-y-auto flex-1 bg-theme-purple m-6 rounded-md max-h-44">
         {postcodes.map((postcode: string) => {
           return (
             <div className="flex relative" key={postcode}>
               <button
+                data-testid={`postcode-chip-button-${postcode}`}
                 onClick={() => onClickPostcode(postcode)}
                 className="rounded-sm hover:brightness-150 w-24 p-2 h-10 m-4 bg-white text-theme-purple font-bold"
               >
