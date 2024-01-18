@@ -9,7 +9,7 @@ const DataViewTable = ({
   postcode,
   loadingCoordinates,
 }: DataViewTableProps) => {
-  const [crimeTypes, setCrimeTypes] = useState<string[]>([""]);
+  const [crimeTypes, setCrimeTypes] = useState<string[]>([]);
   const [selectedCrimeType, setSelectedCrimeType] = useState<string>(
     crimeTypes[0]
   );
