@@ -1,8 +1,4 @@
-type SearchBarProps = {
-  onSubmit: React.FormEventHandler;
-  onChange: React.ChangeEventHandler;
-  search: string;
-};
+import { SearchBarProps } from "./types";
 
 const SearchBar = ({ onSubmit, search, onChange }: SearchBarProps) => {
   return (

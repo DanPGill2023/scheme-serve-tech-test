@@ -1,7 +1,4 @@
-type HistoricSearchProps = {
-  onClickPostcode: (postcode: string) => void;
-  onClickRemovePostcode: (postcode: string) => void;
-};
+import { HistoricSearchProps } from "./types";
 
 const HistoricSearch = ({
   onClickPostcode,
