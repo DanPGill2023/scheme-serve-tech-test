@@ -105,7 +105,7 @@ const CrimeTracker = () => {
         }
         setLoading(false);
       };
-      fetchData().then();
+      fetchData();
     }
   }, [postcodes, selectedPostcodeIndex]);
 
