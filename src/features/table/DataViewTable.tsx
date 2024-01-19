@@ -25,7 +25,7 @@ const DataViewTable = ({
       .filter((type, i, self) => {
         return i === self.indexOf(type);
       })
-      .sort();
+      .toSorted();
 
     return uniqueCrimeTypes;
   };
