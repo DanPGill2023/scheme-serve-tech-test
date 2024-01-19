@@ -25,7 +25,7 @@ const DataViewTable = ({
       .filter((type, i, self) => {
         return i === self.indexOf(type);
       })
-      .sort();
+      .toSorted();
 
     return uniqueCrimeTypes;
   };
@@ -82,8 +82,9 @@ const DataViewTable = ({
 
         setCrimeTypes(crimeTypes);
         setCrimeData(jsonResponse);
+        setLoading(false);
       };
-      fetchData().then(() => setLoading(false));
+      fetchData();
     }
   }, [selectedCoordinates, date]);
 
